@@ -6,6 +6,8 @@ use tonic::{async_trait, Request, Response, Status};
 
 use crate::AuthorizeRequest;
 
+mod sign;
+
 /// A custody backend using threshold signing.  
 ///
 /// This backend is initialized with a full viewing key, but only a share
