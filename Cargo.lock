@@ -5329,6 +5329,7 @@ dependencies = [
  "decaf377 0.5.0",
  "decaf377-rdsa",
  "futures",
+ "ibc-types",
  "im",
  "metrics",
  "once_cell",

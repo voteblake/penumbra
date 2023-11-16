@@ -18,7 +18,7 @@ component = [
 ]
 # proving-keys = ["penumbra-proof-params/proving-keys"]
 default = ["std", "component"]
-std = ["ark-ff/std"]
+std = ["ark-ff/std", "ibc-types/std"]
 parallel = [
     "penumbra-tct/parallel",
     "ark-ff/parallel",
@@ -52,6 +52,7 @@ decaf377-rdsa = { version = "0.7" }
 decaf377 = { version = "0.5", features = ["r1cs"] }
 
 # Crates.io dependencies
+ibc-types = { version = "0.7.0", default-features = false }
 base64 = "0.21"
 ark-r1cs-std = { version = "0.4", default-features = false }
 ark-relations = "0.4"
