@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use decaf377_frost::round1;
+use decaf377_frost as frost;
 use ed25519_consensus::{Signature, VerificationKey};
 use penumbra_proto::{penumbra::custody::threshold::v1alpha1 as pb, DomainType, TypeUrl};
 use penumbra_transaction::plan::TransactionPlan;
@@ -49,7 +49,7 @@ impl DomainType for CoordinatorRound1 {
 #[derive(Debug, Clone)]
 pub struct FollowerRound1 {
     /// A commitment for each spend we need to authorize.
-    commitments: Vec<round1::SigningCommitments>,
+    commitments: Vec<frost::round1::SigningCommitments>,
     /// A verification key identifying who the sender is.
     pk: VerificationKey,
     /// The signature over the protobuf encoding of the commitments.
@@ -106,4 +106,40 @@ impl TypeUrl for FollowerRound1 {
 
 impl DomainType for FollowerRound1 {
     type Proto = pb::FollowerRound1;
+}
+
+#[derive(Debug, Clone)]
+pub struct FollowerRound2 {
+    /// One share of the signature for each authorization we need
+    shares: Vec<frost::round2::SignatureShare>,
+}
+
+impl From<FollowerRound2> for pb::FollowerRound2 {
+    fn from(value: FollowerRound2) -> Self {
+        Self {
+            shares: value.shares.into_iter().map(|x| x.into()).collect(),
+        }
+    }
+}
+
+impl TryFrom<pb::FollowerRound2> for FollowerRound2 {
+    type Error = anyhow::Error;
+
+    fn try_from(value: pb::FollowerRound2) -> Result<Self, Self::Error> {
+        Ok(Self {
+            shares: value
+                .shares
+                .into_iter()
+                .map(|x| x.try_into())
+                .collect::<Result<Vec<_>, _>>()?,
+        })
+    }
+}
+
+impl TypeUrl for FollowerRound2 {
+    const TYPE_URL: &'static str = "/penumbra.custody.threshold.v1alpha1.FollowerRound2";
+}
+
+impl DomainType for FollowerRound2 {
+    type Proto = pb::FollowerRound2;
 }
