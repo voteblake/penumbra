@@ -42,6 +42,25 @@ message SigningCommitments {
   NonceCommitment binding = 2;
 }
 
+// Represents a package we use to produce a signature.
+//
+// This is basically the package used for round 2 of signing.
+message SigningPackage {
+  message Inner {
+    // The identifier of the person who produced this commitment.
+    //
+    // This should not repeat across the package. If it does,
+    // the last appearance takes precedence.
+    bytes identifier = 1;
+    SigningCommitments commitments = 2;
+  }
+
+  // Commitments along with an identifier for the person who made them.
+  repeated Inner all_commitments = 1;
+  // The message to be signed.
+  bytes message = 2;
+}
+
 // A share of the final signature. These get aggregated to make the actual thing.
 message SignatureShare {
   // These bytes should be a valid scalar.

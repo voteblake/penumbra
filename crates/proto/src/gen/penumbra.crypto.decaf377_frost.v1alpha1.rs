@@ -52,6 +52,34 @@ pub struct SigningCommitments {
     #[prost(message, optional, tag = "2")]
     pub binding: ::core::option::Option<NonceCommitment>,
 }
+/// Represents a package we use to produce a signature.
+///
+/// This is basically the package used for round 2 of signing.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SigningPackage {
+    /// Commitments along with an identifier for the person who made them.
+    #[prost(message, repeated, tag = "1")]
+    pub all_commitments: ::prost::alloc::vec::Vec<signing_package::Inner>,
+    /// The message to be signed.
+    #[prost(bytes = "vec", tag = "2")]
+    pub message: ::prost::alloc::vec::Vec<u8>,
+}
+/// Nested message and enum types in `SigningPackage`.
+pub mod signing_package {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Inner {
+        /// The identifier of the person who produced this commitment.
+        ///
+        /// This should not repeat across the package. If it does,
+        /// the last appearance takes precedence.
+        #[prost(bytes = "vec", tag = "1")]
+        pub identifier: ::prost::alloc::vec::Vec<u8>,
+        #[prost(message, optional, tag = "2")]
+        pub commitments: ::core::option::Option<super::SigningCommitments>,
+    }
+}
 /// A share of the final signature. These get aggregated to make the actual thing.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

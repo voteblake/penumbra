@@ -126,6 +126,46 @@ impl SigningPackage {
     }
 }
 
+impl From<SigningPackage> for pb::SigningPackage {
+    fn from(value: SigningPackage) -> Self {
+        Self {
+            all_commitments: value
+                .0
+                .signing_commitments()
+                .into_iter()
+                .map(|(identifier, &commitments)| pb::signing_package::Inner {
+                    identifier: identifier.serialize(),
+                    commitments: Some(round1::SigningCommitments(commitments).into()),
+                })
+                .collect(),
+            message: value.0.message().to_owned(),
+        }
+    }
+}
+
+impl TryFrom<pb::SigningPackage> for SigningPackage {
+    type Error = anyhow::Error;
+
+    fn try_from(value: pb::SigningPackage) -> Result<Self, Self::Error> {
+        Ok(Self(frost::SigningPackage::new(
+            value
+                .all_commitments
+                .into_iter()
+                .map(|x| {
+                    Ok((
+                        frost::Identifier::deserialize(&x.identifier)?,
+                        round1::SigningCommitments::try_from(
+                            x.commitments.ok_or(anyhow!("missing commitments"))?,
+                        )?
+                        .0,
+                    ))
+                })
+                .collect::<Result<_, Self::Error>>()?,
+            &value.message,
+        )))
+    }
+}
+
 /// Signing Round 2 functionality and types.
 pub mod round2 {
     use frost_rerandomized::Randomizer;

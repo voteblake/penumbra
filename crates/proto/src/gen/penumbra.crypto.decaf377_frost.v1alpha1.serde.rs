@@ -498,6 +498,229 @@ impl<'de> serde::Deserialize<'de> for SigningCommitments {
         deserializer.deserialize_struct("penumbra.crypto.decaf377_frost.v1alpha1.SigningCommitments", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SigningPackage {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.all_commitments.is_empty() {
+            len += 1;
+        }
+        if !self.message.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage", len)?;
+        if !self.all_commitments.is_empty() {
+            struct_ser.serialize_field("allCommitments", &self.all_commitments)?;
+        }
+        if !self.message.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            struct_ser.serialize_field("message", pbjson::private::base64::encode(&self.message).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SigningPackage {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "all_commitments",
+            "allCommitments",
+            "message",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AllCommitments,
+            Message,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "allCommitments" | "all_commitments" => Ok(GeneratedField::AllCommitments),
+                            "message" => Ok(GeneratedField::Message),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SigningPackage;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SigningPackage, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut all_commitments__ = None;
+                let mut message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AllCommitments => {
+                            if all_commitments__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allCommitments"));
+                            }
+                            all_commitments__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(SigningPackage {
+                    all_commitments: all_commitments__.unwrap_or_default(),
+                    message: message__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for signing_package::Inner {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.identifier.is_empty() {
+            len += 1;
+        }
+        if self.commitments.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage.Inner", len)?;
+        if !self.identifier.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            struct_ser.serialize_field("identifier", pbjson::private::base64::encode(&self.identifier).as_str())?;
+        }
+        if let Some(v) = self.commitments.as_ref() {
+            struct_ser.serialize_field("commitments", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for signing_package::Inner {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "identifier",
+            "commitments",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Identifier,
+            Commitments,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "identifier" => Ok(GeneratedField::Identifier),
+                            "commitments" => Ok(GeneratedField::Commitments),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = signing_package::Inner;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage.Inner")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<signing_package::Inner, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut identifier__ = None;
+                let mut commitments__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Identifier => {
+                            if identifier__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("identifier"));
+                            }
+                            identifier__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Commitments => {
+                            if commitments__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("commitments"));
+                            }
+                            commitments__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(signing_package::Inner {
+                    identifier: identifier__.unwrap_or_default(),
+                    commitments: commitments__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("penumbra.crypto.decaf377_frost.v1alpha1.SigningPackage.Inner", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for SigningShare {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
