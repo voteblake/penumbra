@@ -405,6 +405,12 @@ pub struct Proposal {
     pub dao_spend: ::core::option::Option<proposal::DaoSpend>,
     #[prost(message, optional, tag = "9")]
     pub upgrade_plan: ::core::option::Option<proposal::UpgradePlan>,
+    #[prost(message, optional, tag = "10")]
+    pub unplanned_ibc_upgrade: ::core::option::Option<proposal::UnplannedIbcUpgrade>,
+    #[prost(message, optional, tag = "11")]
+    pub freeze_ibc_client: ::core::option::Option<proposal::FreezeIbcClient>,
+    #[prost(message, optional, tag = "12")]
+    pub unfreeze_ibc_client: ::core::option::Option<proposal::UnfreezeIbcClient>,
 }
 /// Nested message and enum types in `Proposal`.
 pub mod proposal {
@@ -466,6 +472,32 @@ pub mod proposal {
     pub struct UpgradePlan {
         #[prost(uint64, tag = "1")]
         pub height: u64,
+    }
+    /// An unplanned IBC upgrade is a proposal to update an IBC connection with new configuration
+    /// outside of the normal IBC upgrade process.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UnplannedIbcUpgrade {
+        #[prost(string, tag = "1")]
+        pub connection_id: ::prost::alloc::string::String,
+        #[prost(message, optional, tag = "2")]
+        pub new_config: ::core::option::Option<
+            ::ibc_proto::ibc::core::connection::v1::ConnectionEnd,
+        >,
+    }
+    /// Freeze an existing IBC client.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FreezeIbcClient {
+        #[prost(string, tag = "1")]
+        pub client_id: ::prost::alloc::string::String,
+    }
+    /// Unreeze an existing IBC client.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UnfreezeIbcClient {
+        #[prost(string, tag = "1")]
+        pub client_id: ::prost::alloc::string::String,
     }
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
