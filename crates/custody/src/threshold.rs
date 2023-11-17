@@ -6,6 +6,7 @@ use tonic::{async_trait, Request, Response, Status};
 
 use crate::AuthorizeRequest;
 
+mod config;
 mod sign;
 
 /// A custody backend using threshold signing.  

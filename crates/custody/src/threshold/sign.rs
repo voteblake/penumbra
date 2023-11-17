@@ -1,8 +1,10 @@
-use anyhow::anyhow;
+use anyhow::{anyhow, Result};
 use decaf377_frost as frost;
 use ed25519_consensus::{Signature, VerificationKey};
 use penumbra_proto::{penumbra::custody::threshold::v1alpha1 as pb, DomainType, TypeUrl};
 use penumbra_transaction::plan::TransactionPlan;
+
+use super::config::Config;
 
 /// Represents the message sent by the coordinator at the start of the signing process.
 ///
@@ -10,13 +12,6 @@ use penumbra_transaction::plan::TransactionPlan;
 #[derive(Debug, Clone)]
 pub struct CoordinatorRound1 {
     plan: TransactionPlan,
-}
-
-impl CoordinatorRound1 {
-    /// Construct a new round1 package given a transaction plan.
-    pub fn new(plan: TransactionPlan) -> Self {
-        Self { plan }
-    }
 }
 
 impl From<CoordinatorRound1> for pb::CoordinatorRound1 {
@@ -44,6 +39,8 @@ impl TypeUrl for CoordinatorRound1 {
 impl DomainType for CoordinatorRound1 {
     type Proto = pb::CoordinatorRound1;
 }
+
+pub struct CoordinatorRound2 {}
 
 /// The message sent by the followers in round1 of signing.
 #[derive(Debug, Clone)]
@@ -142,4 +139,33 @@ impl TypeUrl for FollowerRound2 {
 
 impl DomainType for FollowerRound2 {
     type Proto = pb::FollowerRound2;
+}
+
+pub struct CoordinatorState {}
+
+pub struct FollowerState {}
+
+pub fn coordinator_round1(
+    config: &Config,
+    plan: TransactionPlan,
+) -> Result<(CoordinatorRound1, CoordinatorState)> {
+    todo!()
+}
+
+pub fn coordinator_round2(
+    config: &Config,
+    follower_messages: &[FollowerRound1],
+) -> Result<CoordinatorRound2> {
+    todo!()
+}
+
+pub fn follower_round1(
+    config: &Config,
+    coordinator: CoordinatorRound1,
+) -> Result<(FollowerRound1, FollowerState)> {
+    todo!()
+}
+
+pub fn follower_round2(config: &Config, state: FollowerState) -> Result<FollowerRound2> {
+    todo!()
 }
